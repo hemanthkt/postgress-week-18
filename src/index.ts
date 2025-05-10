@@ -51,11 +51,39 @@ try {
 
 
 app.get("/metadata/:id",async (req,res) => {
+
+    try {
     const id = req.params.id
     const query = `SELECT users.id, users.username, users.email, users.password, addresses.user_id, addresses.country, addresses.city, addresses.street, addresses.pincode FROM users JOIN addresses ON users.id = addresses.user_id WHERE users.id = $1;`
   const response =  await pgClient.query(query, [id])
 
-  res.json(response.rows)
+  res.json(response.rows)     
+    } catch (error) {
+        res.json({
+            message: "inteernal server error"
+        })
+    }
+    
+    
+   
+  
+})
+app.get("/metadata-left/:id",async (req,res) => {
+
+    try {
+    const id = req.params.id
+    const query = `SELECT users.id, users.username, users.email, users.password, addresses.user_id, addresses.country, addresses.city, addresses.street, addresses.pincode FROM users LEFT JOIN addresses ON users.id = addresses.user_id WHERE users.id = $1;`
+  const response =  await pgClient.query(query, [id])
+
+  res.json(response.rows)     
+    } catch (error) {
+        res.json({
+            message: "inteernal server error"
+        })
+    }
+    
+    
+   
   
 })
 
